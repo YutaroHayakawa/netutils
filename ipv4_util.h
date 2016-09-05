@@ -22,7 +22,7 @@ int ipv4_addr2str(char *dst, uint32_t *addr) {
   int err;
   uint8_t cursor = (uint8_t *)addr;
 
-  err = snprintf(dst, IPV4_ADDR_STR_LEN + 1, "%u.%u.%u.%u",
+  err = snprintf(dst, IPV4_ADDR_STR_MAX_LEN + 1, "%u.%u.%u.%u",
       cursor[0], cursor[1], cursor[2], cursor[3]);
   if(err < 0) {
     return -1;

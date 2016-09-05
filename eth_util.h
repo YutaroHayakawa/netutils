@@ -20,7 +20,7 @@ int eth_str2addr(uint8_t *dst, char *addr) {
 int eth_addr2str(char *dst, uint8_t *addr) {
   int err;
 
-  err = snprintf(dst, ETH_ADDR_STR_MAX, "%02x:%02x:%02x:%02x:%02x:%02x",
+  err = snprintf(dst, ETH_ADDR_STR_MAX_LEN + 1, "%02x:%02x:%02x:%02x:%02x:%02x",
       addr[0], addr[1], addr[2], addr[3], addr[4], addr[5]);
   if(err < 0) {
     return -1;

@@ -2,6 +2,7 @@
 #define _ETHERNET_H_
 
 #define ETH_ADDR_LEN 6 // Address length
+#define ETH_ADDR_STR_MAX_LEN 17 // Address string length. Not including '\0'.
 
 /* Well known ethernet types */
 #define ETH_T_IPV4  0x0800
