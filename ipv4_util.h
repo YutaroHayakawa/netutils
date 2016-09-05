@@ -1,45 +1,36 @@
-#ifndef _IPV4_UTIL_H_
-#define _IPV4_UTIL_H_
+#ifndef _IPV4_H_
+#define _IPV4_H_
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <sys/types.h>
-#include <netinet/in.h>
-#include <net/if.h>
-#include <ifaddrs.h>
+int ipv4_str2addr(uint32_t *dst, char *addr) {
+  int err;
+  uint8_t tmp[4];
 
-#define FORMAT_IP4_ADDR "%u.%u.%u.%u"
+  err = sscanf(addr, "%u.%u.%u.%u",
+      tmp, tmp+1, tmp+2, tmp+3);
+  if(err < 0) {
+    return -1;
+  }else if(err != IP_ADDR_LEN) {
+    return -1;
+  }
 
-int get_ip4_addr(const char *ifname, struct in_addr *ipaddr)
-{
-    struct ifaddrs *ifap;
-    struct ifaddrs *searcher;
-    struct sockaddr_in *in_addr;
-    int ret = 0;
+  memcpy(dst, tmp, 32);
 
-    if((ret = getifaddrs(&ifap)) < 0) {
-        return ret;
-    }
-
-    searcher = ifap;
-
-    while(searcher->ifa_next != NULL) {
-        if(strcmp(searcher->ifa_name, ifname) == 0 &&
-                searcher->ifa_addr->sa_family == AF_INET) {
-            in_addr = (struct sockaddr_in *)searcher->ifa_addr;
-            memcpy(ipaddr, &(in_addr->sin_addr), sizeof(struct in_addr));
-            ret = 0;
-            break;
-        }
-        searcher = searcher->ifa_next;
-    }
-
-    if(ret != 0) {
-        ret = -1;
-    }
-
-    freeifaddrs(ifap);
-    return ret;
+  return 0;
 }
-#endif /* !_IPV4_UTIL_H_ */
+
+int ipv4_addr2str(char *dst, uint32_t *addr) {
+  int err;
+  uint8_t cursor = (uint8_t *)addr;
+
+  err = snprintf(dst, IPV4_ADDR_STR_LEN + 1, "%u.%u.%u.%u",
+      cursor[0], cursor[1], cursor[2], cursor[3]);
+  if(err < 0) {
+    return -1;
+  }else if(err != 4) {
+    return -1;
+  }
+
+  return 0;
+}
+
+#endif /* _IPV4_H_ */
